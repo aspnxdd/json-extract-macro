@@ -38,12 +38,7 @@ macro_rules! json_extract {
                     }
                     counter+=1;
                 }
-                if res.is_some() {
-                    res
-                }
-                else{
-                    None
-                }
+                res
         }
        };
    }
