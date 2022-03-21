@@ -1,14 +1,10 @@
-
-
 {
   "brand": {
     "tesla": {
-      "model": {
-        "designers": ["a","b"]
-      }
+      "models": 
+        {
+          "designers": ["a", "b"]
+        }
     }
   }
 }
-
-
-
