@@ -1,10 +1,21 @@
 {
   "brand": {
     "tesla": {
-      "models": 
+      "guys": ["3", "4", "5"],
+      "models": [
         {
-          "designers": ["a", "b"]
+          "designers": ["a", "b"],
+          "name": "a1ada sdas"
+        },
+        {
+          "designers": ["a", "b"],
+          "name": "a2"
+        },
+        {
+          "designers": ["a", "b"],
+          "name": "a3"
         }
+      ]
     }
   }
 }
