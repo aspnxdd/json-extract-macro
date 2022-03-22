@@ -3,9 +3,27 @@
 {
   "brand": {
     "tesla": {
+<<<<<<< Updated upstream
       "model": {
         "designers": ["a","b"]
       }
+=======
+      "guys": ["3", "4", "5"],
+      "models": [
+        {
+          "designers": ["ax", "b"],
+          "name": "a1ada sdas"
+        },
+        {
+          "designers": ["a", "b"],
+          "name": "a2"
+        },
+        {
+          "designers": ["a", "b"],
+          "name": "a3"
+        }
+      ]
+>>>>>>> Stashed changes
     }
   }
 }
