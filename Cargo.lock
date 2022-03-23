@@ -12,6 +12,17 @@ checksum = "1aab8fc367588b89dcee83ab0fd66b72b50b72fa1904d7095045ace2b0c81c35"
 name = "json_extract"
 version = "0.1.0"
 dependencies = [
+ "json_extract 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "json_extract"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dc6e8c5c959bd3e342f82421349f260e4d4166409ff465eabdd7f0d25245ebb4"
+dependencies = [
  "serde",
  "serde_json",
 ]
