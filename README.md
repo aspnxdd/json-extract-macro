@@ -1,11 +1,9 @@
 # json-extract-macro
 ## _Access nested JSON values in 1 line of code_
 
-![image](https://user-images.githubusercontent.com/43625217/159188011-94edaa44-8f18-42c5-b7bc-c8fbf4987767.png)
-
 This macro reduces boilerplate when using ```serde_json::Value``` variants when trying to get into a nested property.
 
-```rs
+```
 let json_parsed = serde_json::json!({
    "brand": {
       "tesla": {
@@ -17,14 +15,14 @@ let json_parsed = serde_json::json!({
  });
 
 ```
-```rs
+```
 let designer: Option<String> = json_extract!("brand.tesla.model.designer", &json_parsed, String);
 
 println!("Who tf is this designer? {}",designer.unwrap_or_default());
 ```
 or...
 
-```rs
+```
  if let serde_json::Value::Object(brand) = &json_parsed {
      let brand = brand.get("brand").unwrap();
      if let serde_json::Value::Object(tesla) = &brand {
