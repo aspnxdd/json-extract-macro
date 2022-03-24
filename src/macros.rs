@@ -5,7 +5,6 @@
 /// 
 ///
 /// ```
-/// use std::fs;
 /// // Include the crates  serde_json and serde
 /// use serde_json;
 /// use serde;
