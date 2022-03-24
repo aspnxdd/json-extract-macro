@@ -1,30 +1,45 @@
 # json-extract-macro
-## _Access nested JSON in 1 line of code_
+## _Access nested JSON values in 1 line of code_
 
 ![image](https://user-images.githubusercontent.com/43625217/159188011-94edaa44-8f18-42c5-b7bc-c8fbf4987767.png)
 
-This macro reduces boilerplate when using serde_json::Value variants when trying to get into a nested property.
+This macro reduces boilerplate when using ```serde_json::Value``` variants when trying to get into a nested property.
 
 ```rs
-let designer: Option<String> = json_extract!("brand.tesla.model.designer", &res, String);
+let json_parsed = serde_json::json!({
+   "brand": {
+      "tesla": {
+         "model": {
+             "designers": "Mr Bean"
+            }
+         }
+     }
+ });
+
+```
+```rs
+let designer: Option<String> = json_extract!("brand.tesla.model.designer", &json_parsed, String);
 
 println!("Who tf is this designer? {}",designer.unwrap_or_default());
 ```
-or
+or...
 
 ```rs
-if let Value::Object(brand) = json_file {
-        let brand = brand.get("brand").unwrap();
-        if let Value::Object(tesla) = brand {
-            let tesla = tesla.get("tesla").unwrap();
-            if let Value::Object(model) = tesla {
-                let model = model.get("model").unwrap();
-                if let Value::String(designer) = model {
-                    println!("Who tf is this designer? {}",designer.to_owned());
-                }
-            }
-        }
-    }
+ if let serde_json::Value::Object(brand) = &json_parsed {
+     let brand = brand.get("brand").unwrap();
+     if let serde_json::Value::Object(tesla) = &brand {
+         let tesla = tesla.get("tesla").unwrap();
+         if let serde_json::Value::Object(model) = &tesla {
+             let model = model.get("model").unwrap();
+             if let serde_json::Value::Object(designers) = &model {
+                 let res = designer.get("designer");
+                 let designer = serde_json::from_value::<String>(res.unwrap().to_owned()).unwrap();
+             }
+         }
+     }
+ }
+
+println!("Who tf is this designer? {}",designer.unwrap_or_default());
 ```
 ## Macro args
 

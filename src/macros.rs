@@ -1,42 +1,49 @@
-//! # Json_extract crate
-//!
-//! This macro reduces boilerplate when using serde_json::Value variants when trying to get into a nested property.
+
+
 
 /// This macro reduces boilerplate when using serde_json::Value variants when trying to get into a nested property.
 /// 
+///
 /// ```
-/// // json example
-/// {"brand": {
+/// use std::fs;
+/// // Include the crates  serde_json and serde
+/// use serde_json;
+/// use serde;
+/// 
+/// 
+/// let json_parsed = serde_json::json!({
+///   "brand": {
 ///     "tesla": {
 ///         "model": {
 ///             "designers": ["Mr Bean","Elon Mosk"]
 ///            }
 ///         }
 ///     }
-/// }
+/// });
 /// 
-/// ```
-///
-/// ```
-/// let designer: Option<String> = json_extract!("brand.tesla.model.designers", &res, String);
-///
-/// println!("Who tf are these designers? {}",designer.unwrap_or_default());
-/// ```
-/// or
-///
-/// ```
-/// if let Value::Object(brand) = json_file {
-///         let brand = brand.get("brand").unwrap();
-///         if let Value::Object(tesla) = brand {
-///             let tesla = tesla.get("tesla").unwrap();
-///             if let Value::Object(model) = tesla {
-///                 let model = model.get("model").unwrap();
-///                 if let Value::String("designers") = model {
-///                     println!("Who tf are these designers? {}",designer.to_owned());
-///                 }
+/// let mut a: Vec<String> = vec![];
+/// let mut b: Vec<String>= vec![];
+/// 
+/// // Standard way
+/// if let serde_json::Value::Object(brand) = &json_parsed {
+///     let brand = brand.get("brand").unwrap();
+///     if let serde_json::Value::Object(tesla) = &brand {
+///         let tesla = tesla.get("tesla").unwrap();
+///         if let serde_json::Value::Object(model) = &tesla {
+///             let model = model.get("model").unwrap();
+///             if let serde_json::Value::Object(designers) = &model {
+///                 let res = designers.get("designers");
+///                 a = serde_json::from_value::<Vec<String>>(res.unwrap().to_owned()).unwrap();
 ///             }
 ///         }
 ///     }
+/// }
+///
+/// // With the macro
+/// b = json_extract::json_extract!("brand.tesla.model.designers", &json_parsed, Vec<String>).unwrap();
+///
+///
+/// assert_eq!(a,b);
 /// ```
 /// ## Macro args
 ///
@@ -70,9 +77,9 @@
 #[macro_export]
 macro_rules! json_extract {
     ($keys:expr,$json:expr,$t:ty) => {{
-        fn get_value<'a>(prev_key: Option<&'a Value>, key: &'a str) -> Option<&'a Value> {
-            if let Some(Value::Object(actual_obj)) = prev_key {
-                let val: Option<&Value> = actual_obj.get(key);
+        fn get_value<'a>(prev_key: Option<&'a serde_json::Value>, key: &'a str) -> Option<&'a serde_json::Value> {
+            if let Some(serde_json::Value::Object(actual_obj)) = prev_key {
+                let val: Option<&serde_json::Value> = actual_obj.get(key);
                 if val.is_some() {
                     return val;
                 }
@@ -82,12 +89,12 @@ macro_rules! json_extract {
             }
         }
 
-        fn get_final_value<T>(prev_key: Option<&Value>, key: &str) -> Option<T>
+        fn get_final_value<T>(prev_key: Option<&serde_json::Value>, key: &str) -> Option<T>
         where
-            T: DeserializeOwned + std::fmt::Debug,
+            T: serde::de::DeserializeOwned + std::fmt::Debug,
         {
-            if let Some(Value::Object(val_return)) = prev_key {
-                let val_return: Value = val_return.get(key).unwrap().clone();
+            if let Some(serde_json::Value::Object(val_return)) = prev_key {
+                let val_return: serde_json::Value = val_return.get(key).unwrap().clone();
                 let val: Result<T, serde_json::Error> = serde_json::from_value(val_return);
                 if val.is_ok() {
                     return Some(val.unwrap());
@@ -98,11 +105,11 @@ macro_rules! json_extract {
             }
         }
 
-        fn json_loop<'a, T>(chain: Vec<&'a str>, json: &'a Value) -> Option<T>
+        fn json_loop<'a, T>(chain: Vec<&'a str>, json: &'a serde_json::Value) -> Option<T>
         where
-            T: DeserializeOwned + std::fmt::Debug,
+            T: serde::de::DeserializeOwned + std::fmt::Debug,
         {
-            let mut prev_key: Option<&'a Value> = None;
+            let mut prev_key: Option<&'a serde_json::Value> = None;
             let mut counter: usize = 0;
             let mut res: Option<T> = None;
             while counter < chain.len() {
