@@ -19,6 +19,16 @@
 //! 
 //! With the standard way it takes up to 13 lines of code to get the desired value
 //! ```
+//! let json_parsed = serde_json::json!({
+//!   "brand": {
+//!     "tesla": {
+//!         "model": {
+//!             "designers": ["Mr Bean","Elon Mosk"]
+//!            }
+//!         }
+//!     }
+//! });
+//! 
 //! if let serde_json::Value::Object(brand) = &json_parsed {
 //!     let brand = brand.get("brand").unwrap();
 //!     if let serde_json::Value::Object(tesla) = &brand {
@@ -36,6 +46,16 @@
 //!
 //! With the macro it takes only 1 line. 
 //! ```
+//! let json_parsed = serde_json::json!({
+//!   "brand": {
+//!     "tesla": {
+//!         "model": {
+//!             "designers": ["Mr Bean","Elon Mosk"]
+//!            }
+//!         }
+//!     }
+//! });
+//! 
 //! let designers = json_extract::json_extract!("brand.tesla.model.designers", &json_parsed, Vec<String>).unwrap();
 //! ```
 
